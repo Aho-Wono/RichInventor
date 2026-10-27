@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  RichInventor アドイン マニフェスト(テンプレート)
+
+  Inventor は起動時にアドインフォルダ内の .addin を読み、ClassId のクラスを
+  Assembly から探して生成する。COM への登録(regasm)は不要。
+
+  {{ASSEMBLY_PATH}} は tools\Install-AddIn.ps1 が実際の DLL パスに置き換える。
+  このファイルを直接アドインフォルダに置いても動かないので注意。
+
+  ClassId / ClientId は src\RichInventor\StandardAddInServer.cs の
+  [Guid] 属性と一致していること。
+-->
+<Addin Type="Standard">
+  <ClassId>{0165C313-EE82-48FF-9894-36CAF30D298F}</ClassId>
+  <ClientId>{0165C313-EE82-48FF-9894-36CAF30D298F}</ClientId>
+
+  <DisplayName>RichInventor</DisplayName>
+  <Description>STL の一括書き出しなど、Inventor の面倒な作業をまとめたツール集</Description>
+
+  <Assembly>{{ASSEMBLY_PATH}}</Assembly>
+
+  <!-- リボンにタブを出すので、起動時に読み込ませる -->
+  <LoadOnStartUp>1</LoadOnStartUp>
+
+  <!-- アドインマネージャからユーザーがロード/アンロードできるようにする -->
+  <UserUnloadable>1</UserUnloadable>
+  <Hidden>0</Hidden>
+
+  <!-- Inventor 2025 = バージョン 29。それ以降で有効にする -->
+  <SupportedSoftwareVersionGreaterThan>28..</SupportedSoftwareVersionGreaterThan>
+
+  <DataVersion>1</DataVersion>
+  <UserInterfaceVersion>1</UserInterfaceVersion>
+</Addin>

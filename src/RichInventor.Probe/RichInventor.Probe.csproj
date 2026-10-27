@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    検証用のコンソールツール。成果物ではないが、アドインを Inventor に
+    読み込ませずにコアの動作を確かめられるので開発時に効く。
+    アドイン本体と同じクラスを参照しているため、ここが通ればロジックは正しい。
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>RichInventorProbe</AssemblyName>
+    <RootNamespace>RichInventor.Probe</RootNamespace>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <InventorBin Condition="'$(InventorBin)' == '' AND Exists('C:\Program Files\Autodesk\Inventor 2026\Bin\Autodesk.Inventor.Interop.dll')">C:\Program Files\Autodesk\Inventor 2026\Bin</InventorBin>
+    <InventorBin Condition="'$(InventorBin)' == '' AND Exists('C:\Program Files\Autodesk\Inventor 2025\Bin\Autodesk.Inventor.Interop.dll')">C:\Program Files\Autodesk\Inventor 2025\Bin</InventorBin>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RichInventor\RichInventor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- アドイン本体と違い、こちらは単独で動く exe なので interop をコピーする -->
+    <Reference Include="Autodesk.Inventor.Interop">
+      <HintPath>$(InventorBin)\Autodesk.Inventor.Interop.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

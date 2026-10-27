@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Inventor 2025 は .NET 8 でホストされる(SDK_Readme: "since Inventor 2025 RTM
+         the target framework is migrated from .Net Framework to .Net 8")。
+         実機の Inventor.exe に coreclr.dll 8.0.x がロードされていることも確認済み。 -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+
+    <AssemblyName>RichInventor</AssemblyName>
+    <RootNamespace>RichInventor</RootNamespace>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Inventor がクラスを ClassId で見つけられるようにする -->
+    <EnableComHosting>false</EnableComHosting>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    <!-- Inventor の Bin にある interop を参照するだけで、出力先にはコピーしない -->
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <!-- Inventor のインストール先を自動検出する。新しいバージョンを優先。 -->
+  <PropertyGroup>
+    <InventorBin Condition="'$(InventorBin)' == '' AND Exists('C:\Program Files\Autodesk\Inventor 2026\Bin\Autodesk.Inventor.Interop.dll')">C:\Program Files\Autodesk\Inventor 2026\Bin</InventorBin>
+    <InventorBin Condition="'$(InventorBin)' == '' AND Exists('C:\Program Files\Autodesk\Inventor 2025\Bin\Autodesk.Inventor.Interop.dll')">C:\Program Files\Autodesk\Inventor 2025\Bin</InventorBin>
+  </PropertyGroup>
+
+  <Target Name="CheckInventor" BeforeTargets="BeforeBuild">
+    <Error Condition="'$(InventorBin)' == ''"
+           Text="Autodesk.Inventor.Interop.dll が見つかりません。Inventor をインストールするか、InventorBin プロパティで Bin フォルダを指定してください。" />
+  </Target>
+
+  <ItemGroup>
+    <Reference Include="Autodesk.Inventor.Interop">
+      <HintPath>$(InventorBin)\Autodesk.Inventor.Interop.dll</HintPath>
+      <!-- Inventor 本体が読み込む型と同一にする必要があるので、埋め込まずコピーもしない -->
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>
